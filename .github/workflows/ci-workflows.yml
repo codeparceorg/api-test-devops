@@ -1,0 +1,16 @@
+permissions:
+  contents: read  
+  
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  init:
+    name: CI Workflow
+    uses: codeparceorg/ci-workflows/.github/workflows/spring-init.yml@container-app
+    with:
+      java-version: 17
+    secrets: inherit
+      

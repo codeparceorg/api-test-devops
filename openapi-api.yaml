@@ -1,0 +1,135 @@
+openapi: 3.0.3
+info:
+  title: API Test DevOps
+  description: >-
+    Contrato OpenAPI para el microservicio Spring Boot api-test-devops.
+    Los endpoints y los campos email/password se basan en los ejemplos del
+    README del repositorio. Los esquemas de respuesta son deliberadamente
+    genéricos porque el README no documenta su estructura exacta.
+  version: 1.0.0
+servers:
+  - url: https://YOUR-APP-HOST
+    description: Reemplazar por el dominio público de Azure Container Apps o App Service
+tags:
+  - name: Authentication
+    description: Registro e inicio de sesión
+  - name: Users
+    description: Consulta de usuarios
+paths:
+  /demo/api/login:
+    post:
+      tags: [Authentication]
+      operationId: login
+      summary: Iniciar sesión
+      description: Autentica un usuario usando correo electrónico y contraseña.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Credentials'
+            example:
+              email: admin@gmail.com
+              password: "123456"
+      responses:
+        '200':
+          description: Inicio de sesión exitoso. La estructura exacta depende de la implementación.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+              example:
+                message: Login successful
+        '400':
+          description: Solicitud inválida o datos faltantes.
+        '401':
+          description: Credenciales incorrectas.
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /demo/api/signup:
+    post:
+      tags: [Authentication]
+      operationId: signup
+      summary: Registrar usuario
+      description: Crea una cuenta usando correo electrónico y contraseña.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Credentials'
+            example:
+              email: test@gmail.com
+              password: test
+      responses:
+        '201':
+          description: Usuario creado. La estructura exacta depende de la implementación.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+              example:
+                message: User created
+        '200':
+          description: Registro exitoso si la aplicación devuelve HTTP 200.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '400':
+          description: Solicitud inválida o datos faltantes.
+        '409':
+          description: El correo electrónico ya está registrado.
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /demo/api/users:
+    get:
+      tags: [Users]
+      operationId: getUsers
+      summary: Obtener usuarios
+      description: Devuelve la colección de usuarios disponible en el servicio.
+      responses:
+        '200':
+          description: Lista de usuarios. Los campos exactos dependen de la implementación.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  additionalProperties: true
+              example:
+                - id: 1
+                  email: user@example.com
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+components:
+  schemas:
+    Credentials:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          description: Correo electrónico del usuario.
+          example: admin@gmail.com
+        password:
+          type: string
+          format: password
+          description: Contraseña del usuario.
+          example: "123456"
+      additionalProperties: false
+  responses:
+    InternalServerError:
+      description: Error interno del servidor.
+      content:
+        application/json:
+          schema:
+            type: object
+            additionalProperties: true

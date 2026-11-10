@@ -8,7 +8,7 @@ info:
     genéricos porque el README no documenta su estructura exacta.
   version: 1.0.0
 servers:
-  - url: https://YOUR-APP-HOST
+  - url: https://app-services-api-30268d.azurewebsites.net
     description: Reemplazar por el dominio público de Azure Container Apps o App Service
 tags:
   - name: Authentication
